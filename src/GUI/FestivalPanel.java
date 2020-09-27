@@ -8,7 +8,6 @@ public class FestivalPanel extends JPanel {
     private JLabel lblAdmin;
     private JLabel lblVisitor;
 
-    private Color GRAY_TEXT_COLOR = Color.decode("#414042");
     private Color GRAY_BACKGROUND_COLOR = Color.decode("#808285");
 
     public FestivalPanel(int width, int height, String lblText) {
@@ -22,18 +21,19 @@ public class FestivalPanel extends JPanel {
 
         if(lblText.equals("Admin")) {
             lblAdmin = new JLabel("Admin");
-            lblAdmin.setBorder(new EmptyBorder(0, (((width/2))), 0, 0));
-            lblAdmin.setForeground(GRAY_TEXT_COLOR);
+            lblAdmin.setBorder(new EmptyBorder(0, (((width/2)-10)), 0, 0));
+            lblAdmin.setForeground(Color.WHITE);
             add(lblAdmin);
         } else {
             lblVisitor = new JLabel("Visitor");
-            lblVisitor.setBorder(new EmptyBorder(0, ((width/2)), 0, 0));
-            lblVisitor.setForeground(GRAY_TEXT_COLOR);
+            lblVisitor.setBorder(new EmptyBorder(0, ((width/2)-10), 0, 0));
+            lblVisitor.setForeground(Color.WHITE);
             add(lblVisitor);
         }
 
 
     }
+
 
 
 

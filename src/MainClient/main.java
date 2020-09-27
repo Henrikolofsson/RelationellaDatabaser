@@ -1,10 +1,13 @@
 package MainClient;
 
+import Controllers.MainController;
 import GUI.FestivalWindow;
 
 public class main {
 
     public static void main(String[] args) {
-        FestivalWindow festivalWindow = new FestivalWindow();
+        MainController controller = new MainController();
+        FestivalWindow festivalWindow = new FestivalWindow(controller);
+        controller.setFestivalWindow(festivalWindow);
     }
 }
