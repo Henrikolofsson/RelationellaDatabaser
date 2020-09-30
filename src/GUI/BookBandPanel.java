@@ -1,6 +1,8 @@
 package GUI;
 
 import Controllers.MainController;
+import Entities.Band;
+import Entities.Worker;
 
 import javax.swing.*;
 import java.awt.*;
@@ -11,6 +13,9 @@ import java.util.stream.Collectors;
 
 public class BookBandPanel extends JPanel {
     private MainController controller;
+    private ArrayList<Worker> listOfWorkers;
+
+    private JPanel pnlBookBand;
     private JLabel lblBandName;
     private JTextField txtBandName;
     private JLabel lblBandCountry;
@@ -25,8 +30,17 @@ public class BookBandPanel extends JPanel {
 
     public BookBandPanel(MainController controller) {
         this.controller = controller;
+        initializeComponents();
         initializeGUI();
         registerListeners();
+    }
+
+
+    //TODO: Add all the components thats initialized (from initializeGUI)
+    private void initializeComponents() {
+        listOfWorkers = new ArrayList<>();
+        listOfWorkers = controller.getAllWorkers();
+
     }
 
     private void initializeGUI() {
@@ -78,6 +92,7 @@ public class BookBandPanel extends JPanel {
         c.gridy = 1;
         add(comboBoxCountry, c);
 
+
         lblAssignedWorker = new JLabel("Assigned worker: ");
         lblAssignedWorker.setForeground(Color.WHITE);
         c.fill = GridBagConstraints.HORIZONTAL;
@@ -95,6 +110,7 @@ public class BookBandPanel extends JPanel {
         c.gridx = 1;
         c.gridy = 2;
         add(comboBoxWorker, c);
+
 
         lblBandInfo = new JLabel("Band info: ");
         lblBandInfo.setForeground(Color.WHITE);
@@ -119,6 +135,17 @@ public class BookBandPanel extends JPanel {
         c.gridx = 1;
         c.gridy = 4;
         add(btnBookBand, c);
+
+        populateComboBox();
+    }
+
+    private void populateComboBox() {
+        comboBoxWorker.removeAllItems();
+        comboBoxWorker.addItem("No worker selected");
+
+        for(Worker w : listOfWorkers) {
+            comboBoxWorker.addItem(w.toString());
+        }
     }
 
     private void registerListeners() {
@@ -129,6 +156,13 @@ public class BookBandPanel extends JPanel {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
 
+                if(!txtBandName.getText().isEmpty() && comboBoxWorker.getSelectedIndex() != 0 && !txtCountryInfo.getText().isEmpty()) {
+                    Band band = new Band(txtBandName.getText(), comboBoxCountry.getSelectedItem().toString(),
+                            txtCountryInfo.getText(), listOfWorkers.get(comboBoxWorker.getSelectedIndex()-1).getPerson_number());
+                    controller.addBand(band);
+                } else {
+
+                }
         }
     }
 }

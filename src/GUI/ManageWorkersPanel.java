@@ -4,9 +4,13 @@ import Controllers.MainController;
 import Entities.Worker;
 
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.util.ArrayList;
 
 public class ManageWorkersPanel extends JPanel {
@@ -43,6 +47,7 @@ public class ManageWorkersPanel extends JPanel {
         //TODO: fill combobox
         comboBoxWorkers = new JComboBox<>();
         populateComboBox();
+        comboBoxWorkers.setEnabled(false);
        // comboBoxWorkers.addItem("No worker selected");
 
         buttonGroup = new ButtonGroup();
@@ -53,6 +58,13 @@ public class ManageWorkersPanel extends JPanel {
         buttonGroup.add(rdBtnChange);
         buttonGroup.add(rdBtnDelete);
         rdBtnAdd.setSelected(true);
+        rdBtnAdd.setBackground(GRAY_BACKGROUND_COLOR);
+        rdBtnAdd.setForeground(Color.WHITE);
+        rdBtnChange.setBackground(GRAY_BACKGROUND_COLOR);
+        rdBtnChange.setForeground(Color.WHITE);
+        rdBtnDelete.setBackground(GRAY_BACKGROUND_COLOR);
+        rdBtnDelete.setForeground(Color.WHITE);
+
 
         lblWorkerName = new JLabel("Workers name:");
         txtWorkerName = new JTextField();
@@ -63,7 +75,7 @@ public class ManageWorkersPanel extends JPanel {
         lblWorkerAddress = new JLabel("Workers address:");
         txtWorkerAddress = new JTextField();
 
-        btnManageWorker = new JButton("Manage worker");
+        btnManageWorker = new JButton("Add worker");
 
 
 
@@ -154,16 +166,64 @@ public class ManageWorkersPanel extends JPanel {
         }
     }
 
+    private void clearFields() {
+        txtWorkerName.setText("");
+        txtWorkerPersonNumber.setText("");
+        txtWorkerAddress.setText("");
+        txtWorkerPersonNumber.setEnabled(true);
+    }
+
     private void registerListeners() {
         btnManageWorker.addActionListener(new ManageWorkerListener());
+        rdBtnAdd.addItemListener(new RadioButtonListener());
+        rdBtnChange.addItemListener(new RadioButtonListener());
+        rdBtnDelete.addItemListener(new RadioButtonListener());
+        comboBoxWorkers.addItemListener(new ComboBoxListener());
+
+    }
+
+    public class ComboBoxListener implements ItemListener {
+        @Override
+        public void itemStateChanged(ItemEvent e) {
+            int index = comboBoxWorkers.getSelectedIndex();
+            if(index > 0) {
+                txtWorkerName.setText(listOfWorkers.get(index-1).getName());
+                txtWorkerPersonNumber.setText(listOfWorkers.get(index-1).getPerson_number());
+                txtWorkerAddress.setText(listOfWorkers.get(index-1).getAddress());
+                txtWorkerPersonNumber.setEnabled(false);
+            } else if(index == 0) {
+                clearFields();
+            }
+        }
+    }
+
+    public class RadioButtonListener implements ItemListener {
+        @Override
+        public void itemStateChanged(ItemEvent e) {
+            if(e.getStateChange() == ItemEvent.SELECTED && e.getItem() == rdBtnAdd) {
+                System.out.println("rd add");
+                comboBoxWorkers.setSelectedIndex(0);
+                comboBoxWorkers.setEnabled(false);
+                btnManageWorker.setText("Add worker");
+                txtWorkerPersonNumber.setEnabled(true);
+            } else if(e.getStateChange() == ItemEvent.SELECTED && e.getItem() == rdBtnChange) {
+                comboBoxWorkers.setEnabled(true);
+                System.out.println("rd change");
+                btnManageWorker.setText("Change worker");
+            } else if(e.getStateChange() == ItemEvent.SELECTED && e.getItem() == rdBtnDelete){
+                comboBoxWorkers.setEnabled(true);
+                btnManageWorker.setText("Delete worker");
+                System.out.println("rd delete");
+            }
+        }
     }
 
     public class ManageWorkerListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
             if(rdBtnAdd.isSelected()) {
-                if(!txtWorkerName.getText().toString().isEmpty() && !txtWorkerPersonNumber.getText().toString().isEmpty() && !txtWorkerAddress.getText().toString().isEmpty()) {
-                    if(controller.addWorker(txtWorkerPersonNumber.getText().toString(), txtWorkerName.getText().toString(), txtWorkerAddress.getText().toString())) {
+                if(!txtWorkerName.getText().isEmpty() && !txtWorkerPersonNumber.getText().isEmpty() && !txtWorkerAddress.getText().isEmpty()) {
+                    if(controller.addWorker(txtWorkerPersonNumber.getText(), txtWorkerName.getText(), txtWorkerAddress.getText())) {
                         System.out.println("Worker added!");
                     } else {
                         System.out.println("Could not add the worker!");
@@ -173,24 +233,35 @@ public class ManageWorkersPanel extends JPanel {
                     JOptionPane.showConfirmDialog(null, "All fields is not filled correctly.");
                 }
             } else if(rdBtnChange.isSelected()) {
-                if(!txtWorkerName.getText().toString().isEmpty() && !txtWorkerPersonNumber.getText().toString().isEmpty() && !txtWorkerAddress.getText().toString().isEmpty()) {
+                if(!txtWorkerName.getText().isEmpty() && !txtWorkerPersonNumber.getText().isEmpty() && !txtWorkerAddress.getText().isEmpty()) {
                     if(comboBoxWorkers.getSelectedIndex() != 0) {
-                        Worker worker = new Worker(txtWorkerPersonNumber.getText().toString(), txtWorkerName.getText().toString(), txtWorkerAddress.getText().toString());
+                        Worker worker = new Worker(txtWorkerPersonNumber.getText(), txtWorkerName.getText(), txtWorkerAddress.getText());
 
                         if(controller.changeWorker(worker)) {
-                            System.out.println("Combobox:" + comboBoxWorkers.getItemAt(comboBoxWorkers.getSelectedIndex()));
-                            System.out.println("Arraylist:" + listOfWorkers.get(comboBoxWorkers.getSelectedIndex()-1).toString());
+                            JOptionPane.showMessageDialog(null, "Worker is now edited!");
 
 
                         } else {
-
+                            JOptionPane.showMessageDialog(null, "Could not edit the worker!");
                         }
 
-                    } else {
-                        System.out.println("You need to select a worker");
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "You need to select a worker to edit!");
+                    System.out.println("You need to select a worker");
+                }
+            } else {
+                if(comboBoxWorkers.getSelectedIndex() == 0) {
+                    JOptionPane.showMessageDialog(null, "You need to select a worker to delete!");
+                } else {
+                    if(!txtWorkerName.getText().isEmpty() && !txtWorkerAddress.getText().isEmpty()) {
+                        if(controller.deleteWorker(listOfWorkers.get(comboBoxWorkers.getSelectedIndex()-1))) {
+                            JOptionPane.showMessageDialog(null, "Worker is now deleted!");
+                        }
                     }
                 }
             }
+            populateComboBox();
         }
     }
 }
