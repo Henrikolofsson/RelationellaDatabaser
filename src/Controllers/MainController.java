@@ -1,6 +1,7 @@
 package Controllers;
 
 import Database.DatabaseController;
+import Entities.Band;
 import Entities.Worker;
 import GUI.FestivalWindow;
 
@@ -46,5 +47,13 @@ public class MainController {
 
     public boolean changeWorker(Worker worker) {
         return DatabaseController.changeWorker(worker);
+    }
+
+    public boolean deleteWorker(Worker worker) {
+        return DatabaseController.deleteWorker(worker);
+    }
+
+    public boolean addBand(Band band) {
+        return DatabaseController.addBand(band);
     }
 }
