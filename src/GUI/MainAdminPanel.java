@@ -8,7 +8,7 @@ import java.awt.*;
 public class MainAdminPanel extends JPanel {
     private MainController controller;
     private JTabbedPane tabbedPane;
-    private BookBandPanel bookBandPanel;
+    private ManageBandPanel manageBandPanel;
 
     private Color GRAY_BACKGROUND_COLOR = Color.decode("#808285");
 

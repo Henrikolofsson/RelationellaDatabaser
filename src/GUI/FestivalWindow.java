@@ -19,9 +19,10 @@ public class FestivalWindow extends JFrame {
     private JTabbedPane tabbedPane;
     private MainAdminPanel mainAdminPanel;
 
-    private BookBandPanel bookBandPanel;
+    private ManageBandPanel manageBandPanel;
     private ManageWorkersPanel manageWorkersPanel;
     private ManageBandMemberPanel manageBandMemberPanel;
+    private ViewBandMembersAssociationPanel viewBandMembersAssociationPanel;
 
 
     private static int HALF_WINDOW_SIZE = (580/2);
@@ -38,9 +39,9 @@ public class FestivalWindow extends JFrame {
     public void initializeGUI() {
         //Default JFrame initializations
         setTitle("Ruski Festival");
-        setSize(new Dimension(600,600));
+        setSize(new Dimension(600,800));
         setDefaultCloseOperation(this.EXIT_ON_CLOSE);
-        setMinimumSize(new Dimension(600, 580));
+        setMinimumSize(new Dimension(600, 780));
         setVisible(true);
         setBackground(Color.WHITE);
         setLayout(new GridLayout(1,2, 1, 0));
@@ -48,13 +49,13 @@ public class FestivalWindow extends JFrame {
         //Adding one panel for visitors, and one for administrators.
         String admin = "Admin";
         String visitor = "Visitor";
-        adminPanel = new FestivalPanel(HALF_WINDOW_SIZE, 580, admin);
+        adminPanel = new FestivalPanel(HALF_WINDOW_SIZE, 780, admin);
         add(adminPanel);
         visitorPanel = new FestivalPanel(HALF_WINDOW_SIZE, 580, visitor);
         add(visitorPanel);
 
         //Adding the login admin panel
-        loginAdminPanel = new LogInAdminPanel(controller,580, 580);
+        loginAdminPanel = new LogInAdminPanel(controller,580, 780);
 
     }
 
@@ -75,14 +76,17 @@ public class FestivalWindow extends JFrame {
 
         tabbedPane = new JTabbedPane();
 
-        bookBandPanel = new BookBandPanel(controller);
-        tabbedPane.addTab("Book band", bookBandPanel);
+        manageBandPanel = new ManageBandPanel(controller);
+        tabbedPane.addTab("Manage bands", manageBandPanel);
 
         manageWorkersPanel = new ManageWorkersPanel(controller);
         tabbedPane.addTab("Manage workers", manageWorkersPanel);
 
         manageBandMemberPanel = new ManageBandMemberPanel(controller);
         tabbedPane.addTab("Manage band members", manageBandMemberPanel);
+
+        viewBandMembersAssociationPanel = new ViewBandMembersAssociationPanel(controller);
+        tabbedPane.addTab("View band members association", viewBandMembersAssociationPanel);
 
         add(tabbedPane);
 

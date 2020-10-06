@@ -2,6 +2,8 @@ package Controllers;
 
 import Database.DatabaseController;
 import Entities.Band;
+import Entities.BandMember;
+import Entities.BandMembersAssociation;
 import Entities.Worker;
 import GUI.FestivalWindow;
 
@@ -55,5 +57,45 @@ public class MainController {
 
     public boolean addBand(Band band) {
         return DatabaseController.addBand(band);
+    }
+
+    public ArrayList<Band> getAllBands() {
+        return DatabaseController.getAllBands();
+    }
+
+    public boolean changeBand(Band band) {
+        return DatabaseController.changeBand(band);
+    }
+
+    public boolean deleteBand(Band band) {
+        return DatabaseController.deleteBand(band);
+    }
+
+    public ArrayList<BandMember> getAllBandMembers() {
+        return DatabaseController.getAllBandMembers();
+    }
+
+    public boolean addBandMember(BandMember bandMember) {
+        return DatabaseController.addBandMember(bandMember);
+    }
+
+    public boolean addBandMembersAssociation(BandMembersAssociation bandMembersAssociation) {
+        return DatabaseController.addBandMembersAssociation(bandMembersAssociation);
+    }
+
+    public boolean changeBandMember(BandMember bandMember) {
+        return DatabaseController.changeBandMember(bandMember);
+    }
+
+    public boolean deleteBandMember(BandMember bandMember) {
+        return DatabaseController.deleteBandMember(bandMember);
+    }
+
+    public ArrayList<BandMember> getAllBandMembersInBand(int band_id) {
+        return DatabaseController.getAllBandMembersInBand(band_id);
+    }
+
+    public boolean removeBandMemberFromBand(int band_id, int band_member_id) {
+        return DatabaseController.removeBandMemberFromBand(band_id, band_member_id);
     }
 }
