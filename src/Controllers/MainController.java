@@ -67,8 +67,8 @@ public class MainController {
         return DatabaseController.changeBand(band);
     }
 
-    public boolean deleteBand(Band band) {
-        return DatabaseController.deleteBand(band);
+    public boolean deleteBand(String id) {
+        return DatabaseController.deleteBand(id);
     }
 
     public ArrayList<BandMember> getAllBandMembers() {
@@ -87,8 +87,8 @@ public class MainController {
         return DatabaseController.changeBandMember(bandMember);
     }
 
-    public boolean deleteBandMember(BandMember bandMember) {
-        return DatabaseController.deleteBandMember(bandMember);
+    public boolean deleteBandMember(int id) {
+        return DatabaseController.deleteBandMember(id);
     }
 
     public ArrayList<BandMember> getAllBandMembersInBand(int band_id) {

@@ -2,6 +2,7 @@ package GUI;
 
 import Controllers.MainController;
 import Entities.Band;
+import Entities.ComboBoxItem;
 import Entities.Worker;
 
 import javax.swing.*;
@@ -10,7 +11,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class ManageBandPanel extends JPanel {
     private MainController controller;
@@ -24,27 +24,27 @@ public class ManageBandPanel extends JPanel {
     private JLabel lblBandCountry;
     private JComboBox<String> comboBoxCountry;
     private JLabel lblAssignedWorker;
-    private JComboBox<String> comboBoxWorker;
+    private JComboBox<ComboBoxItem> comboBoxWorker;
     private JLabel lblBandInfo;
     private JTextArea txtCountryInfo;
     private JButton btnBookBand;
 
     private JPanel pnlChangeBand;
     private JLabel lblChangeBand;
-    private JComboBox<String> comboBoxBands;
+    private JComboBox<ComboBoxItem> comboBoxBands;
     private JLabel lblChangeBandName;
     private JTextField txtChangeBandName;
     private JLabel lblChangeBandCountry;
     private JComboBox<String> comboBoxChangeCountry;
     private JLabel lblChangeWorker;
-    private JComboBox<String> comboBoxChangeWorker;
+    private JComboBox<ComboBoxItem> comboBoxChangeWorker;
     private JLabel lblChangeBandInfo;
     private JTextArea txtChangeBandInfo;
     private JButton btnChangeBand;
 
     private JPanel pnlDeleteBand;
     private JLabel lblDeleteBand;
-    private JComboBox<String> comboBoxDeleteBand;
+    private JComboBox<ComboBoxItem> comboBoxDeleteBand;
     private JButton btnDeleteBand;
 
     private Color GRAY_BACKGROUND_COLOR = Color.decode("#808285");
@@ -86,7 +86,7 @@ public class ManageBandPanel extends JPanel {
         comboBoxCountry.setMinimumSize(new Dimension(50,50));
         lblAssignedWorker = new JLabel("Assigned worker: ");
         lblAssignedWorker.setForeground(Color.WHITE);
-        comboBoxWorker = new JComboBox<>();
+        comboBoxWorker = new JComboBox<ComboBoxItem>();
         comboBoxWorker.setVisible(true);
         comboBoxWorker.setSize(new Dimension(50, 50));
         lblBandInfo = new JLabel("Band info: ");
@@ -104,7 +104,7 @@ public class ManageBandPanel extends JPanel {
         listOfBands = controller.getAllBands();
         lblChangeBand = new JLabel("Band to change:");
         lblChangeBand.setForeground(Color.WHITE);
-        comboBoxBands = new JComboBox<>();
+        comboBoxBands = new JComboBox<ComboBoxItem>();
         lblChangeBandName = new JLabel("New band name:");
         lblChangeBandName.setForeground(Color.WHITE);
         txtChangeBandName = new JTextField();
@@ -115,7 +115,7 @@ public class ManageBandPanel extends JPanel {
         comboBoxChangeCountry.setVisible(true);
         lblChangeWorker = new JLabel("New assigned worker:");
         lblChangeWorker.setForeground(Color.WHITE);
-        comboBoxChangeWorker = new JComboBox<>();
+        comboBoxChangeWorker = new JComboBox<ComboBoxItem>();
         lblChangeBandInfo = new JLabel("New band info:");
         lblChangeBandInfo.setForeground(Color.WHITE);
         txtChangeBandInfo = new JTextArea();
@@ -129,7 +129,7 @@ public class ManageBandPanel extends JPanel {
         pnlDeleteBand.setBackground(GRAY_BACKGROUND_COLOR);
         lblDeleteBand = new JLabel("Delete band:");
         lblDeleteBand.setForeground(Color.WHITE);
-        comboBoxDeleteBand = new JComboBox<>();
+        comboBoxDeleteBand = new JComboBox<ComboBoxItem>();
         btnDeleteBand = new JButton("Delete band");
 
     }
@@ -309,30 +309,45 @@ public class ManageBandPanel extends JPanel {
     private void populateComboBox() {
         listOfBands = controller.getAllBands();
         listOfWorkers = controller.getAllWorkers();
+
         comboBoxWorker.removeAllItems();
-        comboBoxWorker.addItem("No worker selected");
-        comboBoxChangeWorker.removeAllItems();
-        comboBoxChangeWorker.addItem("No worker selected");
-
-        if(listOfWorkers != null) {
-
-            for (Worker w : listOfWorkers) {
-                comboBoxWorker.addItem(w.toString());
-                comboBoxChangeWorker.addItem(w.toString());
-            }
+        comboBoxWorker.addItem(new ComboBoxItem("-1", "No worker selected"));
+        for(Worker w : listOfWorkers) {
+            comboBoxWorker.addItem(new ComboBoxItem(w.getPerson_number(),w.getName()));
+        }
+        comboBoxWorker.setRenderer(new ListCellRenderer());
+        for(int i = 0; i < comboBoxWorker.getItemCount(); i++) {
+            System.out.println(comboBoxWorker.getItemAt(i));
         }
 
         comboBoxBands.removeAllItems();
-        comboBoxBands.addItem("No band selected");
-        comboBoxDeleteBand.removeAllItems();
-        comboBoxDeleteBand.addItem("No band selected");
-
-        if(listOfBands != null) {
-            for (Band b : listOfBands) {
-                comboBoxBands.addItem(b.getBand_name());
-                comboBoxDeleteBand.addItem(b.getBand_name());
-            }
+        comboBoxBands.addItem(new ComboBoxItem("-1", "No band selected"));
+        for(Band b : listOfBands) {
+            comboBoxBands.addItem(new ComboBoxItem(String.valueOf(b.getBand_id()), b.getBand_name()));
         }
+        comboBoxBands.setRenderer(new ListCellRenderer());
+        for(int i = 0; i < comboBoxBands.getItemCount(); i++) {
+            System.out.println(comboBoxBands.getItemAt(i));
+        }
+
+        comboBoxChangeWorker.removeAllItems();
+        comboBoxChangeWorker.addItem(new ComboBoxItem("-1", "No worker selected"));
+        for(Worker w : listOfWorkers) {
+            comboBoxChangeWorker.addItem(new ComboBoxItem(w.getPerson_number(), w.getName()));
+        }
+        for(int i = 0; i < comboBoxChangeWorker.getItemCount(); i++) {
+            System.out.println(comboBoxChangeWorker.getItemAt(i));
+        }
+
+        comboBoxDeleteBand.removeAllItems();
+        comboBoxDeleteBand.addItem(new ComboBoxItem("-1", "No band selected"));
+        for(Band b : listOfBands) {
+            comboBoxDeleteBand.addItem(new ComboBoxItem(String.valueOf(b.getBand_id()), b.getBand_name()));
+        }
+        for(int i = 0; i < comboBoxDeleteBand.getItemCount(); i++) {
+            System.out.println(comboBoxDeleteBand.getItemAt(i));
+        }
+
     }
 
     private void registerListeners() {
@@ -345,8 +360,9 @@ public class ManageBandPanel extends JPanel {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
                 if(!txtBandName.getText().isEmpty() && comboBoxWorker.getSelectedIndex() != 0 && !txtCountryInfo.getText().isEmpty()) {
+
                     Band band = new Band(-1, txtBandName.getText(), comboBoxCountry.getSelectedItem().toString(),
-                            txtCountryInfo.getText(), listOfWorkers.get(comboBoxWorker.getSelectedIndex()-1).getPerson_number());
+                            txtCountryInfo.getText(), comboBoxWorker.getItemAt(comboBoxWorker.getSelectedIndex()).getDbId());
                     if(controller.addBand(band)) {
                         populateComboBox();
                     }
@@ -363,7 +379,7 @@ public class ManageBandPanel extends JPanel {
                 if(comboBoxChangeWorker.getSelectedIndex() != 0) {
                     if(!txtChangeBandName.getText().isEmpty() && !txtChangeBandInfo.getText().isEmpty()) {
 
-                        Band band = new Band(listOfBands.get(comboBoxBands.getSelectedIndex()-1).getBand_id(),txtChangeBandName.getText(), comboBoxChangeCountry.getSelectedItem().toString(), txtChangeBandInfo.getText(), listOfWorkers.get(comboBoxChangeWorker.getSelectedIndex()-1).getPerson_number());
+                        Band band = new Band(Integer.parseInt(comboBoxBands.getItemAt(comboBoxBands.getSelectedIndex()).getDbId()),txtChangeBandName.getText(),comboBoxChangeCountry.getSelectedItem().toString() ,txtChangeBandInfo.getText() , comboBoxChangeWorker.getItemAt(comboBoxChangeWorker.getSelectedIndex()).getDbId());
                         if(controller.changeBand(band)) {
                             populateComboBox();
                         }
@@ -381,7 +397,7 @@ public class ManageBandPanel extends JPanel {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
             if(comboBoxDeleteBand.getSelectedIndex() != 0) {
-                if(controller.deleteBand(listOfBands.get(comboBoxDeleteBand.getSelectedIndex()-1))) {
+                if(controller.deleteBand(comboBoxDeleteBand.getItemAt(comboBoxDeleteBand.getSelectedIndex()).getDbId())) {
                     populateComboBox();
                 }
             }

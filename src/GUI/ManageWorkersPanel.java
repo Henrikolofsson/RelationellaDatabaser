@@ -1,11 +1,10 @@
 package GUI;
 
 import Controllers.MainController;
+import Entities.ComboBoxItem;
 import Entities.Worker;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -17,7 +16,7 @@ public class ManageWorkersPanel extends JPanel {
     private MainController controller;
     private ArrayList<Worker> listOfWorkers;
     private JLabel lblWorkers;
-    private JComboBox<String> comboBoxWorkers;
+    private JComboBox<ComboBoxItem> comboBoxWorkers;
     private JLabel lblWorkerName;
     private JTextField txtWorkerName;
     private JLabel lblWorkerPersonNumber;
@@ -45,7 +44,7 @@ public class ManageWorkersPanel extends JPanel {
         lblWorkers = new JLabel("Available workers:");
 
         //TODO: fill combobox
-        comboBoxWorkers = new JComboBox<>();
+        comboBoxWorkers = new JComboBox<ComboBoxItem>();
         populateComboBox();
         comboBoxWorkers.setEnabled(false);
        // comboBoxWorkers.addItem("No worker selected");
@@ -158,12 +157,13 @@ public class ManageWorkersPanel extends JPanel {
 
     private void populateComboBox() {
         comboBoxWorkers.removeAllItems();
-        comboBoxWorkers.addItem("No worker selected");
+        comboBoxWorkers.addItem(new ComboBoxItem("-1", "No worker selected"));
 
         listOfWorkers = controller.getAllWorkers();
         for(Worker w : listOfWorkers) {
-            comboBoxWorkers.addItem(w.toString());
+            comboBoxWorkers.addItem(new ComboBoxItem(w.getPerson_number(), w.getName()));
         }
+        comboBoxWorkers.setRenderer(new ListCellRenderer());
     }
 
     private void clearFields() {
@@ -187,9 +187,10 @@ public class ManageWorkersPanel extends JPanel {
         public void itemStateChanged(ItemEvent e) {
             int index = comboBoxWorkers.getSelectedIndex();
             if(index > 0) {
-                txtWorkerName.setText(listOfWorkers.get(index-1).getName());
-                txtWorkerPersonNumber.setText(listOfWorkers.get(index-1).getPerson_number());
-                txtWorkerAddress.setText(listOfWorkers.get(index-1).getAddress());
+                txtWorkerName.setText(comboBoxWorkers.getItemAt(comboBoxWorkers.getSelectedIndex()).getText());
+                txtWorkerPersonNumber.setText(comboBoxWorkers.getItemAt(comboBoxWorkers.getSelectedIndex()).getDbId());
+                //TODO: Fix this quickfix for address. Unnecessary loop
+                for(Worker w : listOfWorkers) if(w.getPerson_number().equals(comboBoxWorkers.getItemAt(comboBoxWorkers.getSelectedIndex()).getDbId())) txtWorkerAddress.setText(w.getAddress());
                 txtWorkerPersonNumber.setEnabled(false);
             } else if(index == 0) {
                 clearFields();

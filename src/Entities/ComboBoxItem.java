@@ -1,19 +1,19 @@
 package Entities;
 
 public class ComboBoxItem {
-    private int dbId;
+    private String dbId;
     private String text;
 
-    public ComboBoxItem(int dbId, String text) {
+    public ComboBoxItem(String dbId, String text) {
         this.dbId = dbId;
         this.text = text;
     }
 
-    public int getDbId() {
+    public String getDbId() {
         return dbId;
     }
 
-    public void setDbId(int dbId) {
+    public void setDbId(String dbId) {
         this.dbId = dbId;
     }
 
@@ -27,9 +27,6 @@ public class ComboBoxItem {
 
     @Override
     public String toString() {
-        return "ComboBoxItem{" +
-                "dbId=" + dbId +
-                ", text='" + text + '\'' +
-                '}';
+        return text + "(" + dbId + ")";
     }
 }

@@ -19,7 +19,7 @@ public class DatabaseController {
         connection = null;
         try {
             connection = DriverManager.getConnection(DB_URL, user, password);
-            System.out.println("Connection to database successful.");
+        //    System.out.println("Connection to database successful.");
         } catch(SQLException e) {
             System.out.println(e.getMessage());
         }
@@ -210,11 +210,10 @@ public class DatabaseController {
         return false;
     }
 
-    public static boolean deleteBand(Band band) {
+    public static boolean deleteBand(String id) {
         connect();
         try {
-            System.out.println(band.getBand_id());
-            String str = "DELETE FROM bands WHERE id ='" + band.getBand_id() + "';";
+            String str = "DELETE FROM bands WHERE id ='" + id + "';";
             PreparedStatement statement = connection.prepareStatement(str);
             statement.executeUpdate();
             statement.close();
@@ -311,15 +310,15 @@ public class DatabaseController {
         return false;
     }
 
-    public static boolean deleteBandMember(BandMember bandMember) {
+    public static boolean deleteBandMember(int id) {
         connect();
         try {
-            String str = "DELETE FROM bandmembers WHERE bandmemberid = '" + bandMember.getBand_member_id() + "';";
+            String str = "DELETE FROM bandmembers WHERE bandmemberid = '" + id + "';";
             PreparedStatement statement = connection.prepareStatement(str);
             statement.executeUpdate();
             statement.close();
 
-            String str1 = "DELETE FROM bandmembersassociation WHERE bandmembersassociationbandmemberid = '" + bandMember.getBand_member_id() + "';";
+            String str1 = "DELETE FROM bandmembersassociation WHERE bandmembersassociationbandmemberid = '" + id + "';";
             statement = connection.prepareStatement(str1);
             statement.executeUpdate();
             statement.close();

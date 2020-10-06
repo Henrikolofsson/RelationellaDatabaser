@@ -3,7 +3,7 @@ package GUI;
 import Controllers.MainController;
 import Entities.Band;
 import Entities.BandMember;
-import Entities.BandMembersAssociation;
+import Entities.ComboBoxItem;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -26,7 +26,7 @@ public class ManageBandMemberPanel extends JPanel {
 
     private JPanel pnlChangeMember;
     private JLabel lblBandMembers;
-    private JComboBox<String> comboBoxBandMembers;
+    private JComboBox<ComboBoxItem> comboBoxBandMembers;
     private JLabel lblChangeBandMemberName;
     private JTextField txtChangeBandMemberName;
     private JLabel lblChangeBandMemberInfo;
@@ -35,7 +35,7 @@ public class ManageBandMemberPanel extends JPanel {
 
     private JPanel pnlDeleteMember;
     private JLabel lblDeleteBandMember;
-    private JComboBox<String> comboBoxBandMembersToDelete;
+    private JComboBox<ComboBoxItem> comboBoxBandMembersToDelete;
     private JButton btnDeleteBandMember;
 
     private Color GRAY_BACKGROUND_COLOR = Color.decode("#808285");
@@ -75,8 +75,8 @@ public class ManageBandMemberPanel extends JPanel {
         lblBandMembers = new JLabel("All band members:");
         lblBandMembers.setForeground(Color.WHITE);
         //TODO: Fill combobox bands with all the band members available
-        comboBoxBandMembers = new JComboBox<String>();
-        comboBoxBandMembers.addItem("No band member selected");
+        comboBoxBandMembers = new JComboBox<ComboBoxItem>();
+        comboBoxBandMembers.addItem(new ComboBoxItem("-1", "No band member selected"));
         lblChangeBandMemberName = new JLabel("Band member name to change:");
         lblChangeBandMemberName.setForeground(Color.WHITE);
         txtChangeBandMemberName = new JTextField();
@@ -93,8 +93,8 @@ public class ManageBandMemberPanel extends JPanel {
         lblDeleteBandMember = new JLabel("Choose member to delete:");
         lblDeleteBandMember.setForeground(Color.WHITE);
         //TODO: Fill combobox bands with all the band members available to delete
-        comboBoxBandMembersToDelete = new JComboBox<>();
-        comboBoxBandMembersToDelete.addItem("No band member selected");
+        comboBoxBandMembersToDelete = new JComboBox<ComboBoxItem>();
+        comboBoxBandMembersToDelete.addItem(new ComboBoxItem("-1", "No band member selected"));
         btnDeleteBandMember = new JButton("Delete band member");
 
 
@@ -229,22 +229,15 @@ public class ManageBandMemberPanel extends JPanel {
 
     private void populateComboBoxes() {
         listOfBands = controller.getAllBands();
-     //   comboBoxBands.removeAllItems();
-     //   comboBoxBands.addItem("No band selected");
-     //   for(Band b : listOfBands) comboBoxBands.addItem(b.getBand_name());
-
         listOfBandMembers = controller.getAllBandMembers();
-     //   comboBoxBandMembersToAdd.removeAllItems();
-     //   comboBoxBandMembersToAdd.addItem("No band member selected");
-     //   for(BandMember bm : listOfBandMembers) comboBoxBandMembersToAdd.addItem(bm.getBand_member_name());
 
         comboBoxBandMembers.removeAllItems();
-        comboBoxBandMembers.addItem("No band member selected");
-        for(BandMember bm : listOfBandMembers) comboBoxBandMembers.addItem(bm.getBand_member_name());
+        comboBoxBandMembers.addItem(new ComboBoxItem("-1", "No band member selected"));
+        for(BandMember bm : listOfBandMembers) comboBoxBandMembers.addItem(new ComboBoxItem(String.valueOf(bm.getBand_member_id()), bm.getBand_member_name()));
 
         comboBoxBandMembersToDelete.removeAllItems();
-        comboBoxBandMembersToDelete.addItem("No band member selected");
-        for(BandMember bm : listOfBandMembers) comboBoxBandMembersToDelete.addItem(bm.getBand_member_name());
+        comboBoxBandMembersToDelete.addItem(new ComboBoxItem("-1", "No band member selected"));
+        for(BandMember bm : listOfBandMembers) comboBoxBandMembersToDelete.addItem(new ComboBoxItem(String.valueOf(bm.getBand_member_id()), bm.getBand_member_name()));
     }
 
     public class AddBandMemberListener implements ActionListener {
@@ -268,7 +261,7 @@ public class ManageBandMemberPanel extends JPanel {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
             if(comboBoxBandMembers.getSelectedIndex() != 0 && !txtChangeBandMemberName.getText().isEmpty() && !txtChangeBandMemberInfo.getText().isEmpty()) {
-                BandMember bandMember = new BandMember(listOfBandMembers.get(comboBoxBandMembers.getSelectedIndex()-1).getBand_member_id(), txtChangeBandMemberName.getText(), txtChangeBandMemberInfo.getText());
+                BandMember bandMember = new BandMember(Integer.parseInt(comboBoxBandMembers.getItemAt(comboBoxBandMembers.getSelectedIndex()).getDbId()), txtChangeBandMemberName.getText(), txtChangeBandMemberInfo.getText());
                 if(controller.changeBandMember(bandMember)) {
                     populateComboBoxes();
                 } else {
@@ -284,7 +277,7 @@ public class ManageBandMemberPanel extends JPanel {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
             if(comboBoxBandMembersToDelete.getSelectedIndex() != 0) {
-                if(controller.deleteBandMember(listOfBandMembers.get(comboBoxBandMembersToDelete.getSelectedIndex()-1))) {
+                if(controller.deleteBandMember(Integer.parseInt(comboBoxBandMembersToDelete.getItemAt(comboBoxBandMembersToDelete.getSelectedIndex()).getDbId()))) {
                     populateComboBoxes();
                 } else {
                     JOptionPane.showMessageDialog(null, "Could not delete band member and its associations");

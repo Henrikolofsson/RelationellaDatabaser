@@ -14,8 +14,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.ArrayList;
-import java.util.Vector;
-import java.util.*;
 
 public class ViewBandMembersAssociationPanel extends JPanel {
     private MainController controller;
@@ -24,28 +22,23 @@ public class ViewBandMembersAssociationPanel extends JPanel {
 
     private JPanel pnlViewAssociations;
     private JLabel lblViewBands;
-    private JComboBox comboBoxViewBandAssociations;
-    private Vector vectorComboBoxViewBandAssociations;
+    private JComboBox<ComboBoxItem> comboBoxViewBandAssociations;
     private JLabel lblViewBandMembers;
     private DefaultListModel<String> model;
     private JList<String> jlistOfBandMembers;
 
     private JPanel pnlAddMemberToBand;
     private JLabel lblBands;
-    private JComboBox<String> comboBoxBands;
-    private Vector vectorComboBoxBands;
+    private JComboBox<ComboBoxItem> comboBoxBands;
     private JLabel lblAddBandMembersToBand;
-    private JComboBox<String> comboBoxBandMembersToAdd;
-    private Vector vectorComboBoxBandMembersToAdd;
+    private JComboBox<ComboBoxItem> comboBoxBandMembersToAdd;
     private JButton btnAddMemberToBand;
 
     private JPanel pnlRemoveBandMemberAssociation;
     private JLabel lblRemoveFromBand;
-    private JComboBox<String> comboBoxRemoveFromBand;
-    private Vector vectorComboBoxRemoveFromBand;
+    private JComboBox<ComboBoxItem> comboBoxRemoveFromBand;
     private JLabel lblRemoveBandMember;
-    private JComboBox<String> comboBoxRemoveBandMember;
-    private Vector vectorComboBoxRemoveBandMember;
+    private JComboBox<ComboBoxItem> comboBoxRemoveBandMember;
     private JButton btnRemoveMemberFromBand;
 
 
@@ -83,11 +76,10 @@ public class ViewBandMembersAssociationPanel extends JPanel {
         pnlAddMemberToBand.setBackground(GRAY_BACKGROUND_COLOR);
         lblBands = new JLabel("Bands:");
         lblBands.setForeground(Color.WHITE);
-        comboBoxBands = new JComboBox<String>();
+        comboBoxBands = new JComboBox<ComboBoxItem>();
         lblAddBandMembersToBand = new JLabel("Band member to add:");
         lblAddBandMembersToBand.setForeground(Color.WHITE);
         comboBoxBandMembersToAdd = new JComboBox<>();
-        comboBoxBandMembersToAdd.addItem("No band member selected");
         btnAddMemberToBand = new JButton("Add member to band");
 
         pnlRemoveBandMemberAssociation = new JPanel(new GridBagLayout());
@@ -237,32 +229,34 @@ public class ViewBandMembersAssociationPanel extends JPanel {
 
     private void populateViewComboBox() {
         comboBoxViewBandAssociations.removeAllItems();
-//        vectorComboBoxViewBandAssociations.clear();
-      //  vectorComboBoxViewBandAssociations.addElement(new ComboBoxItem(0, "No band selected"));
-        int i = 0;
+        comboBoxViewBandAssociations.addItem(new ComboBoxItem("-1", "No band selected"));
         for(Band b : listOfBands) {
-        //    vectorComboBoxViewBandAssociations.addElement(new ComboBoxItem(b.getBand_id(), b.getBand_name()));
+            comboBoxViewBandAssociations.addItem(new ComboBoxItem(String.valueOf(b.getBand_id()), b.getBand_name()));
         }
-       // comboBoxViewBandAssociations.setModel(vectorComboBoxViewBandAssociations);
     }
 
     private void populateAddComboBox() {
         comboBoxBands.removeAllItems();
-        comboBoxBands.addItem("No band selected");
-        for(Band b : listOfBands) comboBoxBands.addItem(b.getBand_name());
+        comboBoxBands.addItem(new ComboBoxItem("-1", "No band selected"));
+        for(Band b : listOfBands) comboBoxBands.addItem(new ComboBoxItem(String.valueOf(b.getBand_id()), b.getBand_name()));
 
         comboBoxBandMembersToAdd.removeAllItems();
-        comboBoxBandMembersToAdd.addItem("No band member selected");
-        for(BandMember bm : listOfBandMembers) comboBoxBandMembersToAdd.addItem(bm.getBand_member_name());
+        comboBoxBandMembersToAdd.addItem(new ComboBoxItem("-1", "No band member selected"));
+        for(BandMember bm : listOfBandMembers) comboBoxBandMembersToAdd.addItem(new ComboBoxItem(String.valueOf(bm.getBand_member_id()), bm.getBand_member_name()));
+        /*if(comboBoxRemoveFromBand.getSelectedIndex() != 0 && comboBoxRemoveBandMember.getSelectedIndex() != 0) {
+            ArrayList<BandMember> specificBandMembers = controller.getAllBandMembersInBand(Integer.parseInt(comboBoxRemoveFromBand.getItemAt(comboBoxRemoveFromBand.getSelectedIndex()).getDbId()));
+            for(BandMember bm : specificBandMembers) comboBoxBandMembersToAdd.addItem(new ComboBoxItem(String.valueOf(bm.getBand_member_id()), bm.getBand_member_name()));
+        }*/
     }
 
     private void populateRemoveComboBox() {
         comboBoxRemoveFromBand.removeAllItems();
-        comboBoxRemoveFromBand.addItem("No band selected");
-        for(Band b : listOfBands) comboBoxRemoveFromBand.addItem(b.getBand_name());
+        comboBoxRemoveFromBand.addItem(new ComboBoxItem("-1", "No band selected"));
+        for(Band b : listOfBands) comboBoxRemoveFromBand.addItem(new ComboBoxItem(String.valueOf(b.getBand_id()), b.getBand_name()));
 
         comboBoxRemoveBandMember.removeAllItems();
-        comboBoxRemoveBandMember.addItem("No band member selected");
+        comboBoxRemoveBandMember.addItem(new ComboBoxItem("-1", "No band member selected"));
+        for(BandMember bm : listOfBandMembers) comboBoxRemoveBandMember.addItem(new ComboBoxItem(String.valueOf(bm.getBand_member_id()), bm.getBand_member_name()));
     }
 
     public class BandSelectedListener implements ItemListener {
@@ -270,7 +264,7 @@ public class ViewBandMembersAssociationPanel extends JPanel {
         public void itemStateChanged(ItemEvent itemEvent) {
             System.out.println("BandSelectedListener");
             if(itemEvent.getStateChange() == ItemEvent.SELECTED) {
-                ArrayList<BandMember> bandMembers = controller.getAllBandMembersInBand(listOfBands.get(comboBoxViewBandAssociations.getSelectedIndex()-1).getBand_id());
+                ArrayList<BandMember> bandMembers = controller.getAllBandMembersInBand(Integer.parseInt(comboBoxViewBandAssociations.getItemAt(comboBoxViewBandAssociations.getSelectedIndex()).getDbId()));
                 if(bandMembers != null) {
                     model.clear();
                     int i = 0;
@@ -289,10 +283,9 @@ public class ViewBandMembersAssociationPanel extends JPanel {
         public void itemStateChanged(ItemEvent itemEvent) {
             System.out.println("BandSelectedRemoveListener");
             if(itemEvent.getStateChange() == ItemEvent.SELECTED) {
-                ArrayList<BandMember> bandMembers = controller.getAllBandMembersInBand(listOfBands.get(comboBoxRemoveFromBand.getSelectedIndex()-1).getBand_id());
+                ArrayList<BandMember> bandMembers = controller.getAllBandMembersInBand(Integer.parseInt(comboBoxRemoveFromBand.getItemAt(comboBoxRemoveFromBand.getSelectedIndex()).getDbId()));
                 comboBoxRemoveBandMember.removeAllItems();
-                comboBoxRemoveBandMember.addItem("No band member selected");
-                for(BandMember bm : bandMembers) comboBoxRemoveBandMember.addItem(bm.getBand_member_name());
+                for(BandMember bm : bandMembers) comboBoxRemoveBandMember.addItem(new ComboBoxItem(String.valueOf(bm.getBand_member_id()), bm.getBand_member_name()));
             }
         }
     }
@@ -301,8 +294,7 @@ public class ViewBandMembersAssociationPanel extends JPanel {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
             if(comboBoxBands.getSelectedIndex() != 0 && comboBoxBandMembersToAdd.getSelectedIndex() != 0) {
-                BandMembersAssociation bandMembersAssociation = new BandMembersAssociation(listOfBands.get(comboBoxBands.getSelectedIndex()-1).getBand_id(),
-                        listOfBandMembers.get(comboBoxBandMembersToAdd.getSelectedIndex()-1).getBand_member_id());
+                BandMembersAssociation bandMembersAssociation = new BandMembersAssociation(Integer.parseInt(comboBoxBands.getItemAt(comboBoxBands.getSelectedIndex()).getDbId()), Integer.parseInt(comboBoxBandMembersToAdd.getItemAt(comboBoxBandMembersToAdd.getSelectedIndex()).getDbId()));
                 if(controller.addBandMembersAssociation(bandMembersAssociation)) {
                     //TODO: present the added member
                 } else {
@@ -314,16 +306,15 @@ public class ViewBandMembersAssociationPanel extends JPanel {
         }
     }
 
+    //TODO: fix this
     public class RemoveBandMemberAssociationListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
             if(comboBoxRemoveFromBand.getSelectedIndex() != 0 && comboBoxRemoveFromBand.getSelectedIndex() != 0) {
-                System.out.println("Band id : " + listOfBands.get(comboBoxRemoveFromBand.getSelectedIndex()-1).getBand_id());
-                System.out.println("Band member id: " + listOfBandMembers.get(comboBoxRemoveBandMember.getSelectedIndex()-1).getBand_member_id());
-                listOfBandMembers = controller.getAllBandMembersInBand(comboBoxRemoveFromBand.getSelectedIndex()-1);
-                if(controller.removeBandMemberFromBand(listOfBands.get(comboBoxRemoveFromBand.getSelectedIndex()-1).getBand_id(),
-                        listOfBandMembers.get(comboBoxRemoveBandMember.getSelectedIndex()-1).getBand_member_id())) {
-
+                ArrayList<BandMember> bandMembers = controller.getAllBandMembersInBand(Integer.parseInt(comboBoxRemoveFromBand.getItemAt(comboBoxRemoveFromBand.getSelectedIndex()).getDbId()));
+                if(controller.removeBandMemberFromBand(Integer.parseInt(comboBoxRemoveFromBand.getItemAt(comboBoxRemoveFromBand.getSelectedIndex()).getDbId()),
+                        Integer.parseInt(comboBoxRemoveBandMember.getItemAt(comboBoxRemoveBandMember.getSelectedIndex()).getDbId()))) {
+                    populateComboBoxes();
                 } else {
                     JOptionPane.showMessageDialog(null, "Could not remove band member from band");
                 }
