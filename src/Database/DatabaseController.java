@@ -1,9 +1,6 @@
 package Database;
 
-import Entities.Band;
-import Entities.BandMember;
-import Entities.BandMembersAssociation;
-import Entities.Worker;
+import Entities.*;
 import org.postgresql.util.PSQLException;
 
 import java.sql.*;
@@ -371,5 +368,59 @@ public class DatabaseController {
             e.printStackTrace();
         }
         return false;
+    }
+
+    public static boolean addConcert(Concert concert) {
+        connect();
+        try {
+            String str = "CREATE TABLE IF NOT EXISTS concerts (" +
+                    "concert_id serial PRIMARY KEY NOT NULL, " +
+                    "concert_day TEXT NOT NULL, " +
+                    "concert_time TEXT NOT NULL," +
+                    "concert_scene TEXT NOT NULL," +
+                    "concert_band_id integer NOT NULL, " +
+                    "FOREIGN KEY (concert_band_id) " +
+                    "REFERENCES bands(id) " +
+                    "ON DELETE CASCADE);";
+            PreparedStatement statement = connection.prepareStatement(str);
+            statement.executeUpdate();
+            statement.close();
+
+            //TODO:Check if concert scene day and time is already booked
+
+            String insert = "INSERT INTO concerts(concert_id, concert_day, concert_time, concert_scene, concert_band_id) VALUES(DEFAULT, '" + concert.getDay() + "', '" + concert.getTime() +
+                    "', '" + concert.getScene() + "', '" + concert.getBand_id() + "');";
+            statement = connection.prepareStatement(insert);
+            statement.executeUpdate();
+            statement.close();
+            return true;
+
+        } catch(SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public static Concert getConcertByBand(String bandId) {
+        connect();
+        try {
+            String str = "SELECT * FROM concerts WHERE EXISTS (SELECT " + bandId + ") ORDER BY concert_time, concert_scene ASC;";
+            PreparedStatement statement = connection.prepareStatement(str);
+            ResultSet rs = statement.executeQuery();
+            Concert concert = null;
+            while(rs.next()) {
+                concert = new Concert(rs.getString(1), Integer.parseInt(rs.getString(5)), rs.getString(2), rs.getString(3), rs.getString(4));
+            }
+            statement.close();
+            disconnect();
+            return concert;
+        } catch(SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static boolean changeConcert(Concert concert) {
+        
     }
 }

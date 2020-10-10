@@ -1,10 +1,7 @@
 package Controllers;
 
 import Database.DatabaseController;
-import Entities.Band;
-import Entities.BandMember;
-import Entities.BandMembersAssociation;
-import Entities.Worker;
+import Entities.*;
 import GUI.FestivalWindow;
 
 import java.util.ArrayList;
@@ -97,5 +94,17 @@ public class MainController {
 
     public boolean removeBandMemberFromBand(int band_id, int band_member_id) {
         return DatabaseController.removeBandMemberFromBand(band_id, band_member_id);
+    }
+
+    public boolean addConcert(Concert concert) {
+        return DatabaseController.addConcert(concert);
+    }
+
+    public Concert getConcertByBand(String bandId) {
+        return DatabaseController.getConcertByBand(bandId);
+    }
+
+    public boolean changeConcert(Concert concert) {
+        return DatabaseController.changeConcert(concert);
     }
 }

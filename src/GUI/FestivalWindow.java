@@ -23,6 +23,7 @@ public class FestivalWindow extends JFrame {
     private ManageWorkersPanel manageWorkersPanel;
     private ManageBandMemberPanel manageBandMemberPanel;
     private ViewBandMembersAssociationPanel viewBandMembersAssociationPanel;
+    private ManageConcertsPanel manageConcertsPanel;
 
 
     private static int HALF_WINDOW_SIZE = (580/2);
@@ -87,6 +88,11 @@ public class FestivalWindow extends JFrame {
 
         viewBandMembersAssociationPanel = new ViewBandMembersAssociationPanel(controller);
         tabbedPane.addTab("View band members association", viewBandMembersAssociationPanel);
+
+        manageConcertsPanel = new ManageConcertsPanel(controller);
+        tabbedPane.addTab("Manage concerts", manageConcertsPanel);
+
+
 
         add(tabbedPane);
 

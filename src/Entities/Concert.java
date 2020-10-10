@@ -1,25 +1,26 @@
 package Entities;
 
-public class Concerts {
+public class Concert {
     private String concert_id;
     private String day;
     private String time;
     private String scene;
-    private String band_name;
+    private int band_id;
 
-    public Concerts(String concert_id, String day, String time, String scene){
+    public Concert(String concert_id, int band_id, String day, String time, String scene){
         this.concert_id = concert_id;
+        this.band_id = band_id;
         this.day = day;
         this.time = time;
         this.scene = scene;
     }
 
-    public String getBand_id() {
-        return concert_id;
+    public int getBand_id() {
+        return band_id;
     }
 
-    public void setBand_id(String band_id) {
-        this.concert_id = band_id;
+    public void setBand_id(int band_id) {
+        this.band_id = band_id;
     }
 
     public String getDay() {
@@ -44,14 +45,6 @@ public class Concerts {
 
     public void setScene(String scene) {
         this.scene = scene;
-    }
-
-    public String getBand_name() {
-        return band_name;
-    }
-
-    public void setBand_name(String band_name) {
-        this.band_name = band_name;
     }
 
     @Override
