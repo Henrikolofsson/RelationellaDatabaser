@@ -4,6 +4,11 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
+/*
+    @Author: Henrik Olofsson
+    @Date: 2020-10-12
+    The panel that fills up the starting window, where you can choose either the admin or visitor interface.
+ */
 public class FestivalPanel extends JPanel {
     private JLabel lblAdmin;
     private JLabel lblVisitor;

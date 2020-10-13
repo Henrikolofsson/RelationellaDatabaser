@@ -15,6 +15,11 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.ArrayList;
 
+/*
+    @Author: Henrik Olofsson
+    @Date: 2020-10-12
+    The panel for managing concerts.
+ */
 public class ManageConcertsPanel extends JPanel {
     private MainController controller;
     private ArrayList<Band> listOfBands;
@@ -218,6 +223,9 @@ public class ManageConcertsPanel extends JPanel {
         populateComboBoxes();
     }
 
+    /*
+        Fills up the ComboBoxes
+     */
     private void populateComboBoxes() {
         comboBoxBands.removeAllItems();
         comboBoxBands.addItem(new ComboBoxItem("-1", "No band selected"));
@@ -252,11 +260,24 @@ public class ManageConcertsPanel extends JPanel {
         comboBoxBands.addItemListener(new ComboBoxListener());
     }
 
+    /*
+        Updates the lists when clicking on the tab corresponding to this panel.
+     */
+    public void setBands(ArrayList<Band> allBands) {
+        this.listOfBands = allBands;
+        populateComboBoxes();
+    }
+
+    /*
+        An ItemListener that is given to the ComboBoxBands to listen on item changed.
+     */
     public class ComboBoxListener implements ItemListener {
         @Override
         public void itemStateChanged(ItemEvent e) {
             if(e.getStateChange() == ItemEvent.SELECTED) {
                 Concert concert = controller.getConcertByBand(comboBoxBands.getItemAt(comboBoxBands.getSelectedIndex()).getDbId());
+                System.out.println(comboBoxBands.getSelectedIndex());
+                System.out.println(concert);
                 if (concert != null) {
                     comboBoxDays.setSelectedIndex(Integer.parseInt(concert.getDay()));
 
@@ -300,32 +321,70 @@ public class ManageConcertsPanel extends JPanel {
                             break;
                     }
 
-                } else if (e.getStateChange() == ItemEvent.DESELECTED) {
-                    System.out.println("Item deselected");
+                    if(rdBtnDelete.isSelected()) {
+                        comboBoxDays.setEnabled(false);
+                        comboBoxTime.setEnabled(false);
+                        comboBoxScene.setEnabled(false);
+                    }
+
+                } else {
+                    JOptionPane.showMessageDialog(null, "No concert available from this band");
+                    comboBoxDays.setSelectedIndex(0);
+                    comboBoxDays.setEnabled(true);
+                    comboBoxTime.setSelectedIndex(0);
+                    comboBoxTime.setEnabled(true);
+                    comboBoxScene.setSelectedIndex(0);
+                    comboBoxScene.setEnabled(true);
                 }
+            } else if (e.getStateChange() == ItemEvent.DESELECTED) {
+                System.out.println("Item deselected");
             }
         }
     }
 
+    /*
+        Listens on changes in radio buttons.
+     */
     public class RadioButtonListener implements ItemListener {
         @Override
         public void itemStateChanged(ItemEvent e) {
             if(e.getStateChange() == ItemEvent.SELECTED && e.getItem() == rdBtnAdd) {
                 System.out.println("rd add");
+                btnManage.setText("Add concert");
+                comboBoxBands.setSelectedIndex(0);
+                comboBoxBands.setEnabled(true);
+                comboBoxDays.setSelectedIndex(0);
+                comboBoxDays.setEnabled(true);
+                comboBoxTime.setSelectedIndex(0);
+                comboBoxTime.setEnabled(true);
+                comboBoxScene.setSelectedIndex(0);
+                comboBoxScene.setEnabled(true);
             } else if(e.getStateChange() == ItemEvent.SELECTED && e.getItem() == rdBtnChange) {
                 System.out.println("rd change");
                 btnManage.setText("Change concert");
                 comboBoxBands.setSelectedIndex(0);
+                comboBoxBands.setEnabled(true);
                 comboBoxDays.setSelectedIndex(0);
+                comboBoxDays.setEnabled(true);
                 comboBoxTime.setSelectedIndex(0);
+                comboBoxTime.setEnabled(true);
                 comboBoxScene.setSelectedIndex(0);
+                comboBoxScene.setEnabled(true);
             } else if(e.getStateChange() == ItemEvent.SELECTED && e.getItem() == rdBtnDelete){
                 System.out.println("rd delete");
                 btnManage.setText("Delete concert");
+                comboBoxBands.setSelectedIndex(0);
+                comboBoxDays.setSelectedIndex(0);
+                comboBoxTime.setSelectedIndex(0);
+                comboBoxScene.setSelectedIndex(0);
             }
         }
     }
 
+    /*
+        The action listener, listens on the button pressed, and depending on the radio button chosen it will do what either Adding, Changing or Deleting a concert.
+        //TODO: Update the ComboBoxes
+     */
     public class ManageConcertsListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
@@ -333,25 +392,41 @@ public class ManageConcertsPanel extends JPanel {
                 if(comboBoxBands.getSelectedIndex() != 0 && comboBoxDays.getSelectedIndex() != 0 && comboBoxTime.getSelectedIndex() != 0 && comboBoxScene.getSelectedIndex() != 0) {
                     Concert concert = new Concert("-1", Integer.parseInt(comboBoxBands.getItemAt(comboBoxBands.getSelectedIndex()).getDbId()), comboBoxDays.getItemAt(comboBoxDays.getSelectedIndex()).getDbId(),
                             comboBoxTime.getItemAt(comboBoxTime.getSelectedIndex()).getText(), comboBoxScene.getItemAt(comboBoxScene.getSelectedIndex()).getText());
-                    if(controller.addConcert(concert)) {
-                        JOptionPane.showMessageDialog(null, "Concert added");
+                    Concert concertByBand = controller.getConcertByBand(comboBoxBands.getItemAt(comboBoxBands.getSelectedIndex()).getDbId());
+                    if(concertByBand == null) {
+                        if(controller.addConcert(concert)) {
+                            JOptionPane.showMessageDialog(null, "Concert added");
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Concert could not be added");
+                        }
                     } else {
-                        JOptionPane.showMessageDialog(null, "Concert could not be added");
+                        JOptionPane.showMessageDialog(null, "Band already got a booked concert!");
                     }
                 }
             } else if(rdBtnChange.isSelected()) {
                 if(comboBoxBands.getSelectedIndex() != 0 && comboBoxDays.getSelectedIndex() != 0 && comboBoxTime.getSelectedIndex() != 0 && comboBoxScene.getSelectedIndex() != 0) {
                     Concert concert = new Concert("-1", Integer.parseInt(comboBoxBands.getItemAt(comboBoxBands.getSelectedIndex()).getDbId()), comboBoxDays.getItemAt(comboBoxDays.getSelectedIndex()).getDbId(),
                             comboBoxTime.getItemAt(comboBoxTime.getSelectedIndex()).getText(), comboBoxScene.getItemAt(comboBoxScene.getSelectedIndex()).getText());
-                    if(controller.changeConcert(concert)) {
-                        JOptionPane.showMessageDialog(null, "Concert changed");
+                    Concert concertByBand = controller.getConcertByBand(comboBoxBands.getItemAt(comboBoxBands.getSelectedIndex()).getDbId());
+                    if(concertByBand != null) {
+                        if(controller.changeConcert(Integer.parseInt(concertByBand.getConcert_id()),concert)) {
+                            JOptionPane.showMessageDialog(null, "Concert changed");
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Concert could not be changed");
+                        }
                     } else {
-                        JOptionPane.showMessageDialog(null, "Concert could not be changed");
+                        JOptionPane.showMessageDialog(null, "This concert does not exist");
                     }
                 }
 
             } else {
-
+                Concert concertByBand = controller.getConcertByBand(comboBoxBands.getItemAt(comboBoxBands.getSelectedIndex()).getDbId());
+                if(concertByBand != null) {
+                    System.out.println(concertByBand.getConcert_id());
+                    if(!controller.deleteConcert(concertByBand.getConcert_id())) {
+                        JOptionPane.showMessageDialog(null, "Concert could not be deleted");
+                    }
+                }
             }
         }
     }

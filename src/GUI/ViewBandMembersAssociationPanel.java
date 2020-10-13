@@ -15,6 +15,11 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.ArrayList;
 
+/*
+    @Author: Henrik Olofsson
+    @Date: 2020-10-12
+    The panel for managing viewing the association between band members and bands.
+ */
 public class ViewBandMembersAssociationPanel extends JPanel {
     private MainController controller;
     private ArrayList<Band> listOfBands;
@@ -219,7 +224,6 @@ public class ViewBandMembersAssociationPanel extends JPanel {
     }
 
     private void populateComboBoxes() {
-        System.out.println("PopulateComboboxes");
         listOfBands = controller.getAllBands();
         listOfBandMembers = controller.getAllBandMembers();
         populateViewComboBox();
@@ -255,6 +259,15 @@ public class ViewBandMembersAssociationPanel extends JPanel {
         for(BandMember bm : listOfBandMembers) comboBoxRemoveBandMember.addItem(new ComboBoxItem(String.valueOf(bm.getBand_member_id()), bm.getBand_member_name()));
     }
 
+    public void setLists(ArrayList<Band> allBands, ArrayList<BandMember> allBandMembers) {
+        this.listOfBands = allBands;
+        this.listOfBandMembers = allBandMembers;
+        populateComboBoxes();
+    }
+
+    /*
+        Listens on what band is selected in the ComboBox and fetches the band members in that band.
+     */
     public class BandSelectedListener implements ItemListener {
         @Override
         public void itemStateChanged(ItemEvent itemEvent) {
@@ -293,6 +306,7 @@ public class ViewBandMembersAssociationPanel extends JPanel {
                 BandMembersAssociation bandMembersAssociation = new BandMembersAssociation(Integer.parseInt(comboBoxBands.getItemAt(comboBoxBands.getSelectedIndex()).getDbId()), Integer.parseInt(comboBoxBandMembersToAdd.getItemAt(comboBoxBandMembersToAdd.getSelectedIndex()).getDbId()));
                 if(controller.addBandMembersAssociation(bandMembersAssociation)) {
                     //TODO: present the added member
+                    populateComboBoxes();
                 } else {
                     JOptionPane.showMessageDialog(null, "Could not add the band member to the band");
                 }

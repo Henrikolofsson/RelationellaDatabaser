@@ -3,12 +3,16 @@ package GUI;
 import Controllers.MainController;
 
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 /*
-  The main window for the application.
+    @Author: Henrik Olofsson
+    @Date: 2020-10-12
+    The main window for the application.
  */
 public class FestivalWindow extends JFrame {
     private StartPanel startPanel;
@@ -17,13 +21,14 @@ public class FestivalWindow extends JFrame {
     private LogInAdminPanel loginAdminPanel;
     private MainController controller;
     private JTabbedPane tabbedPane;
-    private MainAdminPanel mainAdminPanel;
 
     private ManageBandPanel manageBandPanel;
     private ManageWorkersPanel manageWorkersPanel;
     private ManageBandMemberPanel manageBandMemberPanel;
     private ViewBandMembersAssociationPanel viewBandMembersAssociationPanel;
     private ManageConcertsPanel manageConcertsPanel;
+
+    private VisitorPanel visitorMainPanel;
 
 
     private static int HALF_WINDOW_SIZE = (580/2);
@@ -58,6 +63,8 @@ public class FestivalWindow extends JFrame {
         //Adding the login admin panel
         loginAdminPanel = new LogInAdminPanel(controller,580, 780);
 
+        visitorMainPanel = new VisitorPanel(controller, 780, 780);
+
     }
 
     /*
@@ -72,7 +79,6 @@ public class FestivalWindow extends JFrame {
       Removes the login panel, and adds the logged in panel for administrators
      */
     public void setAdminLoggedIn() {
-        mainAdminPanel = new MainAdminPanel(controller, 580, 580);
         remove(loginAdminPanel);
 
         tabbedPane = new JTabbedPane();
@@ -92,9 +98,8 @@ public class FestivalWindow extends JFrame {
         manageConcertsPanel = new ManageConcertsPanel(controller);
         tabbedPane.addTab("Manage concerts", manageConcertsPanel);
 
-
-
         add(tabbedPane);
+        tabbedPane.addChangeListener(new TabChangeListener());
 
         pack();
         repaint();
@@ -135,7 +140,36 @@ public class FestivalWindow extends JFrame {
                 pack();
                 repaint();
             } else if(e.getSource() == visitorPanel) {
+                remove(adminPanel);
+                remove(visitorPanel);
+                add(visitorMainPanel);
+                pack();
+                repaint();
+            }
+        }
+    }
 
+    /*
+        Listens on tab clicks, to update the lists inside of the panels and repopulate the ComboBoxes.
+     */
+    public class TabChangeListener implements ChangeListener {
+        @Override
+        public void stateChanged(ChangeEvent changeEvent) {
+            if(tabbedPane.getSelectedIndex() == 0) {
+                System.out.println("Tabbed pane: Book Band");
+                manageBandPanel.setLists(controller.getAllWorkers(), controller.getAllBands());
+            } else if(tabbedPane.getSelectedIndex() == 1) {
+                System.out.println("Tabbed pane: Manage workers");
+                manageWorkersPanel.setWorkers(controller.getAllWorkers());
+            } else if(tabbedPane.getSelectedIndex() == 2) {
+                System.out.println("Tabbed pane: Manage band members");
+                manageBandMemberPanel.setBandMembers(controller.getAllBandMembers());
+            } else if(tabbedPane.getSelectedIndex() == 3) {
+                System.out.println("Tabbed pane: View band member associations");
+                viewBandMembersAssociationPanel.setLists(controller.getAllBands(), controller.getAllBandMembers());
+            } else if(tabbedPane.getSelectedIndex() == 4) {
+                System.out.println("Tabbed pane: Manage concerts");
+                manageConcertsPanel.setBands(controller.getAllBands());
             }
         }
     }

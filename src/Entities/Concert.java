@@ -1,5 +1,10 @@
 package Entities;
 
+/*
+    @Author: Henrik Olofsson
+    @Date: 2020-10-12
+    An entity/model class for a concert.
+ */
 public class Concert {
     private String concert_id;
     private String day;
@@ -46,6 +51,19 @@ public class Concert {
     public void setScene(String scene) {
         this.scene = scene;
     }
+
+    public String getConcert_id() {
+        return concert_id;
+    }
+
+    public void setConcert_id(String concert_id) {
+        this.concert_id = concert_id;
+    }
+
+   /* public String getConcert() {
+        String concert =
+    }*/
+
 
     @Override
     public String toString() {

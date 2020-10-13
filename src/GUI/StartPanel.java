@@ -3,6 +3,11 @@ package GUI;
 import javax.swing.*;
 import java.awt.*;
 
+/*
+    @Author: Henrik Olofsson
+    @Date: 2020-10-12
+    A class that was meant to be used as a main panel for the first panel to appear, but it ended up not being used.
+ */
 public class StartPanel extends JPanel {
     private FestivalPanel adminPanel;
     private FestivalPanel visitorPanel;

@@ -12,6 +12,11 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.ArrayList;
 
+/*
+    @Author: Henrik Olofsson
+    @Date: 2020-10-12
+    The panel for managing workers.
+ */
 public class ManageWorkersPanel extends JPanel {
     private MainController controller;
     private ArrayList<Worker> listOfWorkers;
@@ -43,11 +48,9 @@ public class ManageWorkersPanel extends JPanel {
     private void initializeComponents() {
         lblWorkers = new JLabel("Available workers:");
 
-        //TODO: fill combobox
         comboBoxWorkers = new JComboBox<ComboBoxItem>();
         populateComboBox();
         comboBoxWorkers.setEnabled(false);
-       // comboBoxWorkers.addItem("No worker selected");
 
         buttonGroup = new ButtonGroup();
         rdBtnAdd = new JRadioButton("Add");
@@ -179,9 +182,16 @@ public class ManageWorkersPanel extends JPanel {
         rdBtnChange.addItemListener(new RadioButtonListener());
         rdBtnDelete.addItemListener(new RadioButtonListener());
         comboBoxWorkers.addItemListener(new ComboBoxListener());
-
     }
 
+    public void setWorkers(ArrayList<Worker> allWorkers) {
+        this.listOfWorkers = allWorkers;
+        populateComboBox();
+    }
+
+    /*
+        Listens on item change event in ComboBoxes.
+     */
     public class ComboBoxListener implements ItemListener {
         @Override
         public void itemStateChanged(ItemEvent e) {
@@ -219,6 +229,9 @@ public class ManageWorkersPanel extends JPanel {
         }
     }
 
+    /*
+        The action listener, listens on the button pressed, and depending on the radio button chosen it will do what either Adding, Changing or Deleting a worker.
+     */
     public class ManageWorkerListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
@@ -240,12 +253,9 @@ public class ManageWorkersPanel extends JPanel {
 
                         if(controller.changeWorker(worker)) {
                             JOptionPane.showMessageDialog(null, "Worker is now edited!");
-
-
                         } else {
                             JOptionPane.showMessageDialog(null, "Could not edit the worker!");
                         }
-
                     }
                 } else {
                     JOptionPane.showMessageDialog(null, "You need to select a worker to edit!");

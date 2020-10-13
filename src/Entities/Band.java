@@ -1,5 +1,10 @@
 package Entities;
 
+/*
+    @Author: Henrik Olofsson
+    @Date: 2020-10-12
+    An entity/model class for a band.
+ */
 public class Band {
     private int band_id;
     private String band_name;

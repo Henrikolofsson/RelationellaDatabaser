@@ -12,6 +12,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.*;
 
+/*
+    @Author: Henrik Olofsson
+    @Date: 2020-10-12
+    The panel for managing bands.
+ */
 public class ManageBandPanel extends JPanel {
     private MainController controller;
     private ArrayList<Worker> listOfWorkers;
@@ -56,8 +61,6 @@ public class ManageBandPanel extends JPanel {
         registerListeners();
     }
 
-
-    //TODO: Add all the components thats initialized (from initializeGUI)
     private void initializeComponents() {
         //Initializing components for booking band
         pnlBookBand = new JPanel(new GridBagLayout());
@@ -306,6 +309,9 @@ public class ManageBandPanel extends JPanel {
         populateComboBox();
     }
 
+    /*
+        Fills up the ComboBoxes
+     */
     private void populateComboBox() {
         listOfBands = controller.getAllBands();
         listOfWorkers = controller.getAllWorkers();
@@ -356,6 +362,18 @@ public class ManageBandPanel extends JPanel {
         btnDeleteBand.addActionListener(new DeleteBandListener());
     }
 
+    /*
+        Updates the lists when clicking on the tab corresponding to this panel.
+     */
+    public void setLists(ArrayList<Worker> workers, ArrayList<Band> bands) {
+        this.listOfWorkers = workers;
+        this.listOfBands = bands;
+        populateComboBox();
+    }
+
+    /*
+        ActionListener for booking a band.
+     */
     public class BookBandListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
@@ -372,6 +390,9 @@ public class ManageBandPanel extends JPanel {
         }
     }
 
+    /*
+       ActionListener for changing a band.
+    */
     public class ChangeBandListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
@@ -393,6 +414,9 @@ public class ManageBandPanel extends JPanel {
         }
     }
 
+    /*
+       ActionListener for deleting a band.
+    */
     public class DeleteBandListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {

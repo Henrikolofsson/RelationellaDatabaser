@@ -1,5 +1,10 @@
 package Entities;
 
+/*
+    @Author: Henrik Olofsson
+    @Date: 2020-10-12
+    An entity/model class for a worker.
+ */
 public class Worker {
     private String person_number;
     private String name;

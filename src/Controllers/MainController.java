@@ -5,6 +5,11 @@ import Entities.*;
 import GUI.FestivalWindow;
 
 import java.util.ArrayList;
+/*
+    @Author: Henrik Olofsson
+    @Date: 2020-10-12
+    The MainController is the class that fetches information from the database via the database controller and returns the information to the GUI.
+ */
 
 public class MainController {
     private DatabaseController dbController;
@@ -18,6 +23,9 @@ public class MainController {
         this.window = window;
     }
 
+    /*
+        Checks if the database controller is connected to the database, and if it is, it sends the admin user information to see if it matches the database.
+     */
     public void login(String adminUsername, char[] adminPassword) {
         if(DatabaseController.connect() != null){
             if(DatabaseController.login(adminUsername, adminPassword)) {
@@ -104,7 +112,15 @@ public class MainController {
         return DatabaseController.getConcertByBand(bandId);
     }
 
-    public boolean changeConcert(Concert concert) {
-        return DatabaseController.changeConcert(concert);
+    public boolean changeConcert(int id, Concert concert) {
+        return DatabaseController.changeConcert(id,concert);
+    }
+
+    public boolean deleteConcert(String concert_id) {
+        return DatabaseController.deleteConcert(concert_id);
+    }
+
+    public ArrayList<Concert> getAllConcerts() {
+        return DatabaseController.getAllConcerts();
     }
 }

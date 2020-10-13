@@ -12,6 +12,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
+/*
+    @Author: Henrik Olofsson
+    @Date: 2020-10-12
+    The panel for managing band members.
+ */
 public class ManageBandMemberPanel extends JPanel {
     private MainController controller;
     private ArrayList<Band> listOfBands;
@@ -48,6 +53,9 @@ public class ManageBandMemberPanel extends JPanel {
         registerListeners();
     }
 
+    /*
+        Initializes all the components in the class.
+     */
     private void initializeComponents() {
         listOfBands = controller.getAllBands();
         listOfBandMembers = controller.getAllBandMembers();
@@ -101,6 +109,9 @@ public class ManageBandMemberPanel extends JPanel {
         populateComboBoxes();
     }
 
+    /*
+        Places all the components in this panel and renders it.
+     */
     private void initializeGUI() {
         setLayout(new GridBagLayout());
         setSize(new Dimension(580, 780));
@@ -227,6 +238,9 @@ public class ManageBandMemberPanel extends JPanel {
         btnDeleteBandMember.addActionListener(new DeleteBandMemberListener());
     }
 
+    /*
+        Filling up the ComboBoxes
+     */
     private void populateComboBoxes() {
         listOfBands = controller.getAllBands();
         listOfBandMembers = controller.getAllBandMembers();
@@ -240,6 +254,14 @@ public class ManageBandMemberPanel extends JPanel {
         for(BandMember bm : listOfBandMembers) comboBoxBandMembersToDelete.addItem(new ComboBoxItem(String.valueOf(bm.getBand_member_id()), bm.getBand_member_name()));
     }
 
+    public void setBandMembers(ArrayList<BandMember> allBandMembers) {
+        this.listOfBandMembers = allBandMembers;
+        populateComboBoxes();
+    }
+
+    /*
+        ActionListener for adding a band member.
+     */
     public class AddBandMemberListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
@@ -257,6 +279,9 @@ public class ManageBandMemberPanel extends JPanel {
         }
     }
 
+    /*
+        ActionListener for changing a band member.
+     */
     public class ChangeBandMemberListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
@@ -273,6 +298,9 @@ public class ManageBandMemberPanel extends JPanel {
         }
     }
 
+    /*
+        ActionListener for adding a deleting member.
+     */
     public class DeleteBandMemberListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {

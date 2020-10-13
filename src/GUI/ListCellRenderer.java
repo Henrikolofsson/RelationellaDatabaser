@@ -1,5 +1,9 @@
 package GUI;
-
+/*
+    @Author: Henrik Olofsson
+    @Date: 2020-10-12
+    A class I ended up not needing. The main purpose was to clarify to the JList what information of the items it contained and what information that should be rendered.
+ */
 import Entities.ComboBoxItem;
 
 import javax.swing.*;

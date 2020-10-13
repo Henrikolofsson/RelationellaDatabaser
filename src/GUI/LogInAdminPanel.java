@@ -8,6 +8,11 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+/*
+    @Author: Henrik Olofsson
+    @Date: 2020-10-12
+    The log in window for administrators.
+ */
 public class LogInAdminPanel extends JPanel {
     private MainController controller;
     private JLabel lblUsername;
@@ -23,6 +28,10 @@ public class LogInAdminPanel extends JPanel {
         initializeGUI(width, height);
     }
 
+    /*
+        Initializes and places out the components. (I later decided to divide this into two functions, initializeComponents and initializeGUI.
+        But because this class is small I kept them in the same function)
+     */
     private void initializeGUI(int width, int height) {
         setLayout(new GridBagLayout());
         setSize(new Dimension(width, height));
